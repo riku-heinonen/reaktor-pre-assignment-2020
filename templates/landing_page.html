@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>dpkg packages</title>
+</head>
+
+<body>
+    <div>
+        <h1> Debian package dependencies</h1>
+        <div>
+            {% for package in packages %}
+            <div>
+                <a>
+                    {{ package.name }}
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>

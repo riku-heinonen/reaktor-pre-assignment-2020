@@ -84,8 +84,13 @@ packages = parse_packages(STATUS_FILE_PATH)
 
 
 @app.route('/', methods=['GET'])
-def home():
-    return jsonify([package.serialize() for package in packages.values()])
+def redirect_home():
+    return redirect('/packages/')
+
+
+@app.route('/packages/', methods=['GET'])
+def get_packages():
+    return render_template('landing_page.html', packages=packages.values())
 
 
 if __name__ == '__main__':
