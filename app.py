@@ -93,5 +93,10 @@ def get_packages():
     return render_template('landing_page.html', packages=packages.values())
 
 
+@app.route('/packages/<package_name>', methods=['GET'])
+def get_package(package_name):
+    return render_template('package.html', package=packages[package_name])
+
+
 if __name__ == '__main__':
     app.run(debug=True)
