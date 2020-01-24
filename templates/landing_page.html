@@ -8,6 +8,23 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+    <script>
+        const filterPackages = () => {
+            let input = document.getElementById('list-filter');
+            let filter = input.value.toUpperCase();
+            let listItems = document.getElementById("package-list").getElementsByTagName('a');
+
+            for (i = 0; i < listItems.length; i++) {
+                let link = listItems[i]
+                let text = link.textContent || link.innerText;
+                if (text.toUpperCase().indexOf(filter) > -1) {
+                    listItems[i].style.display = "";
+                } else {
+                    listItems[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -15,7 +32,10 @@
         <div class="container">
             <div class="box">
                 <h1 class="title is-2"> Debian package dependencies</h1>
-                <div class="list is-hoverable">
+                <div class="control">
+                    <input type="text" class="input is-primary" id="list-filter" onkeyup="filterPackages()" placeholder="Search for packages...">
+                </div>
+                <div class="list is-hoverable" id="package-list">
                     {% for package in packages %}
                     <a class="list-item" href="/packages/{{ package.name }}">
                         {{ package.name }}
