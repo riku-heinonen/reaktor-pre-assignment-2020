@@ -14,12 +14,22 @@ class Package():
         self.name = name
         self.version = version
         self.description = description
+        self.dependencies = []
+        self.required_by = []
 
     def serialize(self):
+        try:
+            dependencies = [dep.name for dep in self.dependencies]
+        except Exception:
+            print(self.name)
+            print(self.dependencies)
+        reqs = [req.name for req in self.required_by]
         return {
             'name': self.name,
             'version': self.version,
-            'description': self.description
+            'description': self.description,
+            'dependencies': dependencies,
+            'required_by': reqs
         }
 
     def __repr__(self):
@@ -32,6 +42,7 @@ def parse_package_data(package_string):
         Gets the name, version and description of the package and returns
         them as a Package object. 
     '''
+    dependency_names = None
     lines = package_string.splitlines(keepends=True)
     line_index = 0
     while line_index < len(lines):
@@ -58,9 +69,47 @@ def parse_package_data(package_string):
             # get rid of the last newline
             description = description.rstrip()
 
+        elif line.startswith('Depends'):
+            dependency_names = []
+            dependencies = line.split(': ', 1)[1].strip().split(', ')
+            for dependency in dependencies:
+                # remove the version number from the name
+                dependency_name = dependency.split(':', 1)[0].split(' ', 1)[0]
+                if dependency_name not in dependency_names:
+                    dependency_names.append(dependency_name)
+
         line_index += 1
 
-    return Package(name, version, description)
+    package = Package(name, version, description)
+
+    # some packages don't have dependencies
+    if dependency_names:
+        package.dependencies = dependency_names
+
+    return package
+
+
+def update_dependency(packages, package, dependency_name):
+    '''
+        For the packages that have alternatives, finds the first alternative
+        dependency that exists in the dataset and discards the other alternatives.
+        Replaces the dependency names (strings) of a Package object with
+        objects that represent those dependencies.
+    '''
+    if '|' in dependency_name:
+        # alternatives for a dependency found
+        alternatives = dependency_name.split('|')
+        for alternative in alternatives:
+            # get the first package that exists in the dataset
+            if alternative_name in packages:
+                dependency = packages[alternative_name]
+                break
+    else:
+        dependency = packages[dependency_name]
+
+        # index = package.dependencies.index(dependency_name)
+        # package.dependencies[index] = dependency
+    return dependency
 
 
 def parse_packages(filename):
@@ -73,10 +122,22 @@ def parse_packages(filename):
         raw_data = status_file.read()
         # package entries are separated by a double new-line
         data = raw_data.split('\n\n')
-        for package_string in data[:-2]:
+        for package_string in data[:-1]:
             package = parse_package_data(package_string)
             packages[package.name] = package
 
+    # update dependencies and reverse dependencies
+    for package in packages.values():
+        if package.dependencies:
+            updated_dependencies = []
+            for dependency_name in package.dependencies:
+                if dependency_name in packages:
+                    dependency = update_dependency(packages,
+                                                   package,
+                                                   dependency_name)
+                    updated_dependencies.append(dependency)
+                    packages[dependency_name].required_by.append(package)
+                package.dependencies = updated_dependencies
     return packages
 
 
@@ -93,9 +154,20 @@ def get_packages():
     return render_template('landing_page.html', packages=packages.values())
 
 
+# for debugging purposes
+@app.route('/packages/json', methods=['GET'])
+def get_packages_as_json():
+    return jsonify([package.serialize() for package in packages.values()])
+
+
 @app.route('/packages/<package_name>', methods=['GET'])
 def get_package(package_name):
     return render_template('package.html', package=packages[package_name])
+
+# for debugging purposes
+@app.route('/packages/<package_name>/json', methods=['GET'])
+def get_package_as_json(package_name):
+    return jsonify(packages[package_name].serialize())
 
 
 if __name__ == '__main__':
