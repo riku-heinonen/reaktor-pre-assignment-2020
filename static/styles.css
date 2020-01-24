@@ -1,8 +1,75 @@
+* {
+	font-family: 'Ubuntu', sans-serif;
+}
+
 #description {
 	white-space: pre;
+}
+
+.box,
+.buttons {
+	width: 85%;
+	margin: 0 auto;
+}
+
+.button {
+	padding-left: 0.5em;
+	box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+}
+
+.box {
+	padding: 4em;
 }
 
 .list-item {
 	color: hsl(171, 100%, 35%);
 	background-color: white !important;
+}
+
+.subtitle {
+	padding-top: 1em;
+	margin-bottom: 0.5em !important;
+}
+
+#description-container {
+	box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+	border-radius: 6px;
+	padding: 1em;
+}
+
+@media only screen and (max-width: 768px) {
+	#description {
+		white-space: normal;
+	}
+
+	.section {
+		margin: 0px;
+		padding: 0px;
+	}
+	#button-text {
+		display: none;
+	}
+
+	#package-container {
+		padding-top: 0;
+	}
+	.buttons {
+		width: 100%;
+		padding: 0 2em;
+		padding-top: 2em;
+		margin-bottom: 0;
+	}
+	.box {
+		width: 100%;
+		padding: 2em;
+		border: none;
+		box-shadow: none;
+	}
+	.button {
+		padding-left: 0.75em;
+		/* padding-right: 0.3em; */
+	}
+	.title {
+		font-size: 2rem !important;
+	}
 }

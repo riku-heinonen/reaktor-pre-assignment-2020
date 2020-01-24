@@ -7,21 +7,25 @@
     <title>{{ package.name }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu&display=swap" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 </head>
 
 <body>
     <div class="section">
         <div class="container">
+            
             <div class="buttons">
                 <a class="button is-primary" href="/packages">
-                    <strong>All packages</strong>
+                    <i class="fas fa-angle-left fa-fw"></i>
+                    <span id="button-text"><strong>All packages</strong></span>
                 </a>
             </div>
-            <div class="box">
+            <div class="box" id="package-container">
                 <h1 class="title is-2"> {{ package.name }} </h1>
                 <h3 class="subtitle is-6"> <b>Version</b> {{ package.version }} </h3>
                 <h3 class="subtitle"> Description </h3>
-                <div class="content">
+                <div class="content" id="description-container">
                     <p id="description"> {{ package.description }} </p>
                 </div>
                 {% if package.dependencies %}
