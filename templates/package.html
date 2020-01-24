@@ -16,6 +16,26 @@
         <div>
             <p id="description"> {{ package.description }} </p>
         </div>
+        {% if package.dependencies %}
+        <h2> Dependencies</h2>
+        <div>
+            {% for dependency in package.dependencies %}
+            <a href="/packages/{{ dependency.name }}">
+                {{ dependency.name }}
+            </a> <br>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if package.required_by %}
+        <h2> Reverse dependencies </h2>
+        <div>
+            {% for req in package.required_by %}
+            <a href="/packages/{{ req.name }}">
+                {{ req.name }}
+            </a> <br>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </body>
 
