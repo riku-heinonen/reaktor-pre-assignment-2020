@@ -5,19 +5,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>dpkg packages</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <div>
-        <h1> Debian package dependencies</h1>
-        <div>
-            {% for package in packages %}
-            <div>
-                <a href="/packages/{{ package.name }}">
-                    {{ package.name }}
-                </a>
+    <div class="section">
+        <div class="container">
+            <div class="box">
+                <h1 class="title is-2"> Debian package dependencies</h1>
+                <div class="list is-hoverable">
+                    {% for package in packages %}
+                    <a class="list-item" href="/packages/{{ package.name }}">
+                        {{ package.name }}
+                    </a>
+                    {% endfor %}
+                </div>
             </div>
-            {% endfor %}
         </div>
     </div>
 </body>

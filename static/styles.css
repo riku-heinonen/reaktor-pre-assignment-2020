@@ -1,3 +1,8 @@
 #description {
 	white-space: pre;
 }
+
+.list-item {
+	color: hsl(171, 100%, 35%);
+	background-color: white !important;
+}

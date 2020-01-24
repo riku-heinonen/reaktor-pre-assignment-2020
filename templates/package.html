@@ -4,38 +4,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Package {{package['Name'] }}</title>
+    <title>{{ package.name }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <div>
-        <h1> {{ package.name }} </h1>
-        <h3> Version {{ package.version }} </h3>
-        <h3> Description </h3>
-        <div>
-            <p id="description"> {{ package.description }} </p>
+    <div class="section">
+        <div class="container">
+            <div class="buttons">
+                <a class="button is-primary" href="/packages">
+                    <strong>All packages</strong>
+                </a>
+            </div>
+            <div class="box">
+                <h1 class="title is-2"> {{ package.name }} </h1>
+                <h3 class="subtitle is-6"> <b>Version</b> {{ package.version }} </h3>
+                <h3 class="subtitle"> Description </h3>
+                <div class="content">
+                    <p id="description"> {{ package.description }} </p>
+                </div>
+                {% if package.dependencies %}
+                <h2 class="subtitle"> Dependencies </h2>
+                <div class="list is-hoverable">
+                    {% for dependency in package.dependencies %}
+                    <a class="list-item package-link" href="/packages/{{ dependency.name }}">
+                        {{ dependency.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if package.required_by %}
+                <h2 class="subtitle"> Required by </h2>
+                <div class="list is-hoverable">
+                    {% for req in package.required_by %}
+                    <a class="list-item" href="/packages/{{ req.name }}">
+                        {{ req.name }}
+                    </a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
         </div>
-        {% if package.dependencies %}
-        <h2> Dependencies</h2>
-        <div>
-            {% for dependency in package.dependencies %}
-            <a href="/packages/{{ dependency.name }}">
-                {{ dependency.name }}
-            </a> <br>
-            {% endfor %}
-        </div>
-        {% endif %}
-        {% if package.required_by %}
-        <h2> Reverse dependencies </h2>
-        <div>
-            {% for req in package.required_by %}
-            <a href="/packages/{{ req.name }}">
-                {{ req.name }}
-            </a> <br>
-            {% endfor %}
-        </div>
-        {% endif %}
     </div>
 </body>
 
