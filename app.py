@@ -70,10 +70,7 @@ def parse_package_data(package_string):
             dependency_names = []
             dependencies = line.split(': ', 1)[1].strip().split(', ')
             for dependency in dependencies:
-                # remove the version number from the name
-                dependency_name = dependency.split(':', 1)[0].split(' ', 1)[0]
-                if dependency_name not in dependency_names:
-                    dependency_names.append(dependency_name)
+                dependency_names.append(dependency)
 
         line_index += 1
 
@@ -93,15 +90,19 @@ def update_dependency(packages, package, dependency_name):
         Replaces the dependency names (strings) of a Package object with
         objects that represent those dependencies.
     '''
+    dependency = None
     if '|' in dependency_name:
         # alternatives for a dependency found
-        alternatives = dependency_name.split('|')
+        alternatives = dependency_name.split(' | ')
         for alternative in alternatives:
+            alternative_name = alternative.split(':', 1)[0].split(' ', 1)[0]
             # get the first package that exists in the dataset
             if alternative_name in packages:
                 dependency = packages[alternative_name]
                 break
     else:
+        dependency_name = dependency_name.split(':', 1)[0].split(' ', 1)[0]
+        if dependency_name in packages:
         dependency = packages[dependency_name]
 
         # index = package.dependencies.index(dependency_name)
