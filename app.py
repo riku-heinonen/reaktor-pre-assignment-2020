@@ -18,18 +18,15 @@ class Package():
         self.required_by = []
 
     def serialize(self):
-        try:
-            dependencies = [dep.name for dep in self.dependencies]
-        except Exception:
-            print(self.name)
-            print(self.dependencies)
-        reqs = [req.name for req in self.required_by]
+        '''
+            Returns the contents of the package as a dictionary.
+        '''
         return {
             'name': self.name,
             'version': self.version,
             'description': self.description,
-            'dependencies': dependencies,
-            'required_by': reqs
+            'dependencies': [dep.name for dep in self.dependencies],
+            'required_by': [req.name for req in self.required_by]
         }
 
     def __repr__(self):
@@ -39,7 +36,7 @@ class Package():
 def parse_package_data(package_string):
     '''
         Parses one entry of the status file (separated by a double newline). 
-        Gets the name, version and description of the package and returns
+        Gets the name, version, description and dependencies of the package and returns
         them as a Package object. 
     '''
     dependency_names = None
