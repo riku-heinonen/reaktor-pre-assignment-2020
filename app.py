@@ -35,9 +35,9 @@ class Package():
 
 def parse_package_data(package_string):
     '''
-        Parses one entry of the status file (separated by a double newline). 
+        Parses one entry of the status file (separated by a double newline).
         Gets the name, version, description and dependencies of the package and returns
-        them as a Package object. 
+        them as a Package object.
     '''
     dependency_names = None
     lines = package_string.splitlines(keepends=True)
@@ -103,10 +103,8 @@ def update_dependency(packages, package, dependency_name):
     else:
         dependency_name = dependency_name.split(':', 1)[0].split(' ', 1)[0]
         if dependency_name in packages:
-        dependency = packages[dependency_name]
+            dependency = packages[dependency_name]
 
-        # index = package.dependencies.index(dependency_name)
-        # package.dependencies[index] = dependency
     return dependency
 
 
@@ -129,15 +127,15 @@ def parse_packages(filename):
         if package.dependencies:
             updated_dependencies = []
             for dependency_name in package.dependencies:
-                    dependency = update_dependency(packages,
-                                                   package,
-                                                   dependency_name)
+                dependency = update_dependency(packages,
+                                               package,
+                                               dependency_name)
                 if dependency:
                     if dependency not in updated_dependencies:
-                    updated_dependencies.append(dependency)
+                        updated_dependencies.append(dependency)
                     if package not in packages[dependency.name].required_by:
                         packages[dependency.name].required_by.append(package)
-                package.dependencies = updated_dependencies
+            package.dependencies = updated_dependencies
     return packages
 
 
@@ -154,15 +152,16 @@ def get_packages():
     return render_template('landing_page.html', packages=packages.values())
 
 
+@app.route('/packages/<package_name>', methods=['GET'])
+def get_package(package_name):
+    return render_template('package.html', package=packages[package_name])
+
+
 # for debugging purposes
 @app.route('/packages/json', methods=['GET'])
 def get_packages_as_json():
     return jsonify([package.serialize() for package in packages.values()])
 
-
-@app.route('/packages/<package_name>', methods=['GET'])
-def get_package(package_name):
-    return render_template('package.html', package=packages[package_name])
 
 # for debugging purposes
 @app.route('/packages/<package_name>/json', methods=['GET'])
@@ -171,6 +170,4 @@ def get_package_as_json(package_name):
 
 
 if __name__ == '__main__':
-    app.jinja_env.auto_reload = True
-    app.config['TEMPLATES_AUTO_RELOAD'] = True
-    app.run(debug=True)
+    app.run()
