@@ -120,7 +120,7 @@ def parse_packages(filename):
         raw_data = status_file.read()
         # package entries are separated by a double new-line
         data = raw_data.split('\n\n')
-        for package_string in data[:-1]:
+        for package_string in data[: -1]:
             package = parse_package_data(package_string)
             packages[package.name] = package
 
@@ -129,12 +129,14 @@ def parse_packages(filename):
         if package.dependencies:
             updated_dependencies = []
             for dependency_name in package.dependencies:
-                if dependency_name in packages:
                     dependency = update_dependency(packages,
                                                    package,
                                                    dependency_name)
+                if dependency:
+                    if dependency not in updated_dependencies:
                     updated_dependencies.append(dependency)
-                    packages[dependency_name].required_by.append(package)
+                    if package not in packages[dependency.name].required_by:
+                        packages[dependency.name].required_by.append(package)
                 package.dependencies = updated_dependencies
     return packages
 
