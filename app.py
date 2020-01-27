@@ -1,12 +1,11 @@
 from flask import Flask, jsonify, render_template, redirect
 from pprint import pprint as pp
 import json
-import os
 
 
 # instantiate the app
 app = Flask(__name__)
-STATUS_FILE_PATH = os.path.abspath('/var/lib/dpkg/status') or 'static/status'
+STATUS_FILE_PATH = 'static/status'
 
 
 class Package():
