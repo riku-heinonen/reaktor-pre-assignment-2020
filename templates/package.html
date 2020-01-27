@@ -30,7 +30,7 @@
                 {% if package.dependencies %}
                 <h2 class="subtitle"> Dependencies </h2>
                 <div class="list is-hoverable">
-                    {% for dependency in package.dependencies %}
+                    {% for dependency in package.dependencies|sort(attribute="name") %}
                     <a class="list-item package-link" href="/packages/{{ dependency.name }}">
                         {{ dependency.name }}
                     </a>
@@ -40,7 +40,7 @@
                 {% if package.required_by %}
                 <h2 class="subtitle"> Required by </h2>
                 <div class="list is-hoverable">
-                    {% for req in package.required_by %}
+                    {% for req in package.required_by|sort(attribute="name") %}
                     <a class="list-item" href="/packages/{{ req.name }}">
                         {{ req.name }}
                     </a>

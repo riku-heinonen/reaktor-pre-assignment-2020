@@ -149,7 +149,7 @@ def redirect_home():
 
 @app.route('/packages/', methods=['GET'])
 def get_packages():
-    return render_template('landing_page.html', packages=packages.values())
+    return render_template('landing_page.html', packages=sorted(packages.values(), key=lambda p: p.name))
 
 
 @app.route('/packages/<package_name>', methods=['GET'])
