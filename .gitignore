@@ -1,2 +1,3 @@
 .vscode/
-flask-env/
+venv/
+__pycache__/
